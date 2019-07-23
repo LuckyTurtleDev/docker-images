@@ -1,9 +1,9 @@
-FROM debian:buster-slim
+FROM debian:arm32v7/buster-slim
 
 LABEL maintainer="felix.yadomi@gmail.com"
 LABEL version="v0.91.2"
 
-ADD http://download.repetier.com/files/server/debian-amd64/Repetier-Server-0.91.2-Linux.deb repetier-server.deb
+ADD http://download.repetier.com/files/server/debian-armhf/Repetier-Server-0.91.2-Linux.deb repetier-server.deb
 
 RUN dpkg --unpack repetier-server.deb \
     && rm -rf repetier-server.deb \
