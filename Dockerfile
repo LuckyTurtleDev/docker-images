@@ -1,4 +1,4 @@
-FROM debian:arm32v7/buster-slim
+FROM debian:buster-slim
 
 LABEL maintainer="felix.yadomi@gmail.com"
 LABEL version="v0.91.2"
