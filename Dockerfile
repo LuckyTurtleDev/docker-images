@@ -5,7 +5,9 @@ LABEL version="v0.91.2"
 
 ADD http://download.repetier.com/files/server/debian-armhf/Repetier-Server-0.91.2-Linux.deb repetier-server.deb
 
-RUN dpkg --unpack repetier-server.deb \
+RUN apt-get update \
+    && dpkg --unpack repetier-server.deb \
+    && apt-get install -y avrdude \
     && rm -rf repetier-server.deb \
     && rm -f /var/lib/dpkg/info/repetier-server.postinst
 
