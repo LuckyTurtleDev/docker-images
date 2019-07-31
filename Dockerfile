@@ -1,9 +1,9 @@
 FROM debian:buster-slim
 
 LABEL maintainer="felix.yadomi@gmail.com"
-LABEL version="v0.91.2"
+LABEL version="v0.92.0"
 
-ADD http://download.repetier.com/files/server/debian-armhf/Repetier-Server-0.91.2-Linux.deb repetier-server.deb
+ADD http://download.repetier.com/files/server/debian-armhf/Repetier-Server-0.92.0-Linux.deb repetier-server.deb
 
 RUN apt-get update \
     && dpkg --unpack repetier-server.deb \
