@@ -7,7 +7,7 @@ ADD http://download.repetier.com/files/server/debian-armhf/Repetier-Server-0.94.
 
 RUN apt-get update \
     && dpkg --unpack repetier-server.deb \
-    && apt --fix-broken install -y \
+    && apt-get -f install -y \
     && rm -rf repetier-server.deb \
     && rm -f /var/lib/dpkg/info/repetier-server.postinst
 
