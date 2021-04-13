@@ -2,7 +2,7 @@
 # Dockerfile for youtube-dl
 #
 
-FROM python:3.9-alpine
+FROM alpine
 MAINTAINER kev <noreply@easypi.pro>
 
 RUN set -xe \
@@ -10,7 +10,7 @@ RUN set -xe \
                           ffmpeg \
                           openssl \
                           aria2 \
-    && pip3 install youtube-dl
+                          youtube-dl
 
 # Try to run it so we know it works
 RUN youtube-dl --version
