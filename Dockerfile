@@ -17,5 +17,12 @@ RUN youtube-dl --version
 
 WORKDIR /data
 
-ENTRYPOINT ["youtube-dl"]
-CMD ["--help"]
+COPY entrypoint.sh /
+
+RUN chmod +x /entrypoint.sh \
+ && echo "* * * * * echo please mount cron tasks to /tasks.cron" >> /tasks.cron
+
+RUN addgroup -g 1000 -S dockeruser \
+ && adduser -h /data -u 1000 -S dockeruser -G dockeruser
+
+ENTRYPOINT  ["/entrypoint.sh"]
