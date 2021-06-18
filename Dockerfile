@@ -2,7 +2,7 @@
 # Dockerfile for youtube-dl
 #
 
-FROM alpine
+FROM alpine:edge
 MAINTAINER kev <noreply@easypi.pro>
 
 RUN set -xe \
@@ -10,7 +10,8 @@ RUN set -xe \
                           ffmpeg \
                           openssl \
                           aria2 \
-                          youtube-dl
+                          youtube-dl \
+                          atomicparsley
 
 # Try to run it so we know it works
 RUN youtube-dl --version
