@@ -6,6 +6,7 @@ FROM alpine:edge
 MAINTAINER kev <noreply@easypi.pro>
 
 RUN set -xe \
+    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && apk add --no-cache ca-certificates \
                           ffmpeg \
                           openssl \
