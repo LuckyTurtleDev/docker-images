@@ -2,17 +2,17 @@
 # Dockerfile for youtube-dl
 #
 
-FROM alpine:edge
+FROM alpine
 MAINTAINER kev <noreply@easypi.pro>
 
 RUN set -xe \
-    && echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+    && echo "@edge https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && apk add --no-cache ca-certificates \
                           ffmpeg \
                           openssl \
                           aria2 \
                           youtube-dl \
-                          atomicparsley
+                          atomicparsley@edge
 
 # Try to run it so we know it works
 RUN youtube-dl --version
