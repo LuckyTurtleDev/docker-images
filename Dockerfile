@@ -1,15 +1,25 @@
-FROM debian:buster-slim
+FROM debian:stable-slim
 
-LABEL maintainer="felix.yadomi@gmail.com"
-LABEL version="v0.94.1"
+ARG VERSION=1.1.2
+ARG TARGETARCH
 
-ADD http://download.repetier.com/files/server/debian-armhf/Repetier-Server-0.94.1-Linux.deb repetier-server.deb
+LABEL org.opencontainers.image.url="https://gitlab.com/Lukas1818/docker-repetier-server/container_registry"
+LABEL org.opencontainers.image.title="a 3D-printer webinterface"
+LABEL org.opencontainers.image.source="https://gitlab.com/Lukas1818/docker-repetier-server"
+LABEL org.opencontainers.image.version="${VERSION}"
+
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
+    && apt-get install -y curl \
+    && case ${TARGETARCH} in arm) ARCH="armhf" ;; arm64) ARCH="arm64hf" ;; 386) ARCH="x86" ;; amd64) ARCH="amd64" ;; esac \
+    && curl http://download.repetier.com/files/server/debian-${ARCH}/Repetier-Server-${VERSION}-Linux.deb -o repetier-server.deb \
+    #download.repetier.com has no https
     && dpkg --unpack repetier-server.deb \
     && apt-get -f install -y \
     && rm -rf repetier-server.deb \
-    && rm -f /var/lib/dpkg/info/repetier-server.postinst
+    && rm -f /var/lib/dpkg/info/repetier-server.postinst \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /data \
     && sed -i "s/var\/lib\/Repetier-Server/data/g" /usr/local/Repetier-Server/etc/RepetierServer.xml
