@@ -10,7 +10,20 @@ Repetier Server from [repetier-server.com](https://www.repetier-server.com/downl
 
 ## Usage
 
-```bash
-docker volume create repetier-data
-docker run -it -p 3344:3344 -v repetier-data:/data --device=/dev/ttyUSB0 --name repetier-server yadomi/repetier-server
+`docker-compose:`
+```yml
+version: "3.4"
+services:
+    repetier-server:
+        image: registry.gitlab.com/lukas1818/docker-repetier-server:latest
+        container_name: repetier-server
+        ports:
+            - '80:3344'
+        volumes:
+            - './data:/data'
+        devices:
+            - /dev/ttyUSB0
+        restart: unless-stopped
 ```
+You may need to mount a different device to the container, as example `/dev/ttyUSB1` or `/dev/ttyACM0`.
+You can list the device with `ls /dev/tty*` before connecting your printer and run the command after connecting it again to find the right device. The device, which is listed additionally, is your printer.
