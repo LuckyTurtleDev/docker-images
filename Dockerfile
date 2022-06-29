@@ -3,9 +3,9 @@ FROM debian:stable-slim
 ARG VERSION=1.3.0
 ARG TARGETARCH
 
-LABEL org.opencontainers.image.url="https://gitlab.com/Lukas1818/docker-repetier-server/container_registry"
+LABEL org.opencontainers.image.url="https://gitlab.com/luckyturtledev/docker-repetier-server/container_registry"
 LABEL org.opencontainers.image.title="a 3D-printer webinterface"
-LABEL org.opencontainers.image.source="https://gitlab.com/Lukas1818/docker-repetier-server"
+LABEL org.opencontainers.image.source="https://gitlab.com/LuckyTurtleDev/docker-repetier-server"
 LABEL org.opencontainers.image.version="${VERSION}"
 
 ENV DEBIAN_FRONTEND noninteractive
