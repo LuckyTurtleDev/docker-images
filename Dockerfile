@@ -1,6 +1,6 @@
 FROM debian:stable-slim
 
-ARG VERSION=1.3.0
+ARG VERSION=1.4.1
 ARG TARGETARCH
 
 LABEL org.opencontainers.image.url="https://gitlab.com/luckyturtledev/docker-repetier-server/container_registry"
