@@ -36,9 +36,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.check-updates.outputs.matrix) }}
-    name: build "${{ matrix.path }}
+    name: build '${{ matrix.path }}'
     steps:
       - name: Echo matrix
         run: |
-          echo "${{ matrix.tag }}"
-          echo "${{ matrix.path }}
+          echo '${{ matrix.tag }}'
+          echo '${{ matrix.path }}'
