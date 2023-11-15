@@ -22,6 +22,8 @@ jobs:
       - run: cat output.txt >> $GITHUB_OUTPUT
         id: output
       - run: cat output.txt
+      - run: echo "matrix=test" >> $GITHUB_OUTPUT
+        id: test
       
   test:
     runs-on: ubuntu-latest
@@ -29,6 +31,8 @@ jobs:
     steps:
       - name: Echo matrix
         run: echo "${{ needs.check-updates.output.matrix }}"
+      - name: test
+        run: echo "${{ needs.check-updates.test.matrix }}"
           
   docker:
     runs-on: ubuntu-latest
