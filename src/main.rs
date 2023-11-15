@@ -19,14 +19,16 @@ struct Matrix {
 
 #[derive(Debug, Serialize)]
 struct Output {
-	tag: String,
+	version: String,
 	path: String,
+	name: String,
+	platforms: String,
 	index: String
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Index {
-	tag: String
+	version: String
 }
 
 fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
@@ -66,19 +68,21 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 			None
 		}
 	};
-	if Some(&tag.version) != index.as_ref().map(|f| &f.tag) {
+	if Some(&tag.version) != index.as_ref().map(|f| &f.version) {
 		println!("found new tag {:?}", tag.version);
 		let path = dir
 			.to_str()
 			.expect("can not convert path to string")
 			.to_owned();
 		let index = Index {
-			tag: tag.version.clone()
+			version: tag.version.clone()
 		};
 		let index = serde_json::to_string_pretty(&index).unwrap();
 		return Ok(Some(Output {
-			tag: tag.version,
+			version: tag.version,
 			path,
+			name: dir_name.into(),
+			platforms: "linux/amd64".to_owned(),
 			index
 		}));
 	}

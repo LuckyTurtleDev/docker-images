@@ -33,6 +33,40 @@ jobs:
     steps:
       - name: Echo matrix
         run: |
-          echo 'tag=${{ matrix.tag }}'
+          echo 'version=${{ matrix.version }}'
           echo 'path=${{ matrix.path }}'
+          echo 'name=${{ matrix.name }}'
           echo 'index=${{ matrix.index }}'
+          echo 'platforms=${{ matrix.platforms }}'
+      - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        if: ${{ matrix.platforms != 'linux/amd64' }}
+        uses: docker/setup-qemu-action@v2
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ format('ghcr.io/{0}/{1}', github.repository_owner, matrix.name) }}
+          tags: |
+            ${{ matrix.version }}
+            latest
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.path }}
+          push: true
+          build-args: version=${{ matrix.version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}}
+          platforms: ${{ inputs.platforms }}
+      - name: update index.json
+        run: echo '${{ matrix.index }}' >> ${{ format('{0}/index.json', matrix.path) }}
