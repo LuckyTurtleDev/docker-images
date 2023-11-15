@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ${{ format('{0}./dockerfile', matrix.path) }}
+          file: ${{ format('{0}/dockerfile', matrix.path) }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}}
