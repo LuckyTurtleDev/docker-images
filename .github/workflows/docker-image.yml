@@ -20,6 +20,7 @@ jobs:
         env:
           RUST_BACKTRACE: 1
       - run: cat output.txt >> $GITHUB_OUTPUT
+        id: output
       - run: cat output.txt
       
   test:
@@ -27,14 +28,14 @@ jobs:
     needs: [check-updates]
     steps:
       - name: Echo matrix
-        run: echo "${{ needs.check-update.outputs.matrix }}"
+        run: echo "${{ needs.check-update.output.matrix }}"
           
   docker:
     runs-on: ubuntu-latest
     needs: [check-updates]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.check-update.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.check-update.output.matrix) }}
     steps:
       - name: Echo matrix
         run: |
