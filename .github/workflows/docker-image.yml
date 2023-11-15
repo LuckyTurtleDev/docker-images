@@ -6,7 +6,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.test.outputs.matrix }}
+      matrix: ${{ steps.test.outputs.test }}
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
@@ -24,7 +24,7 @@ jobs:
       - run: cat output.txt >> $GITHUB_OUTPUT
         id: output
       - run: cat output.txt
-      - run: echo "matrix=test" >> $GITHUB_OUTPUT
+      - run: echo "test=test" >> $GITHUB_OUTPUT
         id: test
       
   test:
@@ -34,7 +34,7 @@ jobs:
       - name: Echo matrix
         run: echo "${{ needs.update.output.matrix }}"
       - name: test
-        run: echo "${{ needs.update.test.matrix }}"
+        run: echo "${{ needs.update.outputs.test }}"
           
   docker:
     runs-on: ubuntu-latest
