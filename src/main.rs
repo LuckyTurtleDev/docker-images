@@ -1,7 +1,7 @@
 use anyhow::Context;
 use package_version::{Source, Sources};
 use serde::{Deserialize, Serialize};
-use std::fs::{read_dir, read_to_string, write, DirEntry};
+use std::{fs::{read_dir, read_to_string, write, DirEntry}, env};
 
 #[derive(Debug, Deserialize)]
 struct Config {
@@ -94,5 +94,6 @@ fn main() {
 	);
 	let json = serde_json::to_string(&matrix).unwrap();
 	let json = format!("matrix={json}");
-	write(".output.txt", json).expect("failed to write to output.txt`");
+	write(".output.txt", &json).expect("failed to write to output.txt`");
+	env::set_var("GITHUB_OUTPUT", json);
 }
