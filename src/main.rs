@@ -1,7 +1,7 @@
 use anyhow::Context;
 use package_version::{Source, Sources};
 use serde::{Deserialize, Serialize};
-use std::fs::{read_dir, read_to_string, write, DirEntry};
+use std::fs::{read_dir, read_to_string, DirEntry};
 
 #[derive(Debug, Deserialize)]
 struct Config {
@@ -93,6 +93,5 @@ fn main() {
 		serde_json::to_string_pretty(&matrix).unwrap()
 	);
 	let json = serde_json::to_string(&matrix).unwrap();
-	let json = format!("matrix={json}");
-	write(".output.txt", json).expect("failed to write to output.txt`");
+	println!("::set-output name={json}");
 }
