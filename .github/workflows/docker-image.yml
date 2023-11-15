@@ -6,7 +6,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.test.output.test }}
+      matrix: ${{ steps.test.output.matrix }}
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
