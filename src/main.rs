@@ -21,6 +21,8 @@ struct Matrix {
 struct Output {
 	tag: String,
 	path: String,
+	name: String,
+	platforms: String,
 	index: String
 }
 
@@ -79,6 +81,8 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		return Ok(Some(Output {
 			tag: tag.version,
 			path,
+			name: dir_name.into(),
+			platforms: "linux/amd64".to_owned(),
 			index
 		}));
 	}
