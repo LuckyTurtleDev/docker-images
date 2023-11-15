@@ -98,6 +98,6 @@ fn main() {
 	let json = serde_json::to_string(&matrix).unwrap();
 	let json = format!("matrix={json}");
 	let github_output = env::var("GITHUB_OUTPUT")
-		.expect("GITHUB_OUTPUT envrionment variabel is not present");
+		.expect("GITHUB_OUTPUT environment variabel is not present");
 	write(github_output, json).expect("failed to write to output.txt`");
 }
