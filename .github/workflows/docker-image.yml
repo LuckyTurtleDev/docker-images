@@ -3,7 +3,7 @@ on:
   push:
   
 jobs:
-  check-updates:
+  update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,19 +27,19 @@ jobs:
       
   test:
     runs-on: ubuntu-latest
-    needs: [check-updates]
+    needs: [update]
     steps:
       - name: Echo matrix
-        run: echo "${{ needs.check-updates.output.matrix }}"
+        run: echo "${{ needs.update.output.matrix }}"
       - name: test
-        run: echo "${{ needs.check-updates.test.matrix }}"
+        run: echo "${{ needs.update.test.matrix }}"
           
   docker:
     runs-on: ubuntu-latest
-    needs: [check-updates]
+    needs: [update]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.check-updates.output.matrix) }}
+      matrix: ${{ fromJson(needs.update.output.matrix) }}
     steps:
       - name: Echo matrix
         run: |
