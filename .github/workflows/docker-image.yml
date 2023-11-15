@@ -35,3 +35,4 @@ jobs:
         run: |
           echo 'tag=${{ matrix.tag }}'
           echo 'path=${{ matrix.path }}'
+          echo 'index=${{ matrix.index }}'

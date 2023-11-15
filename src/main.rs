@@ -12,15 +12,21 @@ struct Config {
 }
 
 /// Github action matrix
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Serialize)]
 struct Matrix {
 	include: Vec<Output>
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Serialize)]
 struct Output {
 	tag: String,
-	path: String
+	path: String,
+	index: String
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Index {
+	tag: String
 }
 
 fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
@@ -43,10 +49,13 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		.into_iter()
 		.next()
 		.ok_or_else(|| anyhow::Error::msg("No suitable tag aviable at source"))?;
-	let old_tag_path = dir.join("last_tag.txt");
-	let old_tag = match read_to_string(&old_tag_path)
-		.with_context(|| format!("failed to open {old_tag_path:?}"))
-	{
+	let index_path = dir.join("index.json");
+	let index: Option<Index> = match read_to_string(&index_path)
+		.with_context(|| format!("failed to open {index_path:?}"))
+		.and_then(|index| {
+			serde_json::from_str(&index)
+				.with_context(|| format!("failed to parse {index_path:?}"))
+		}) {
 		Ok(value) => Some(value),
 		Err(err) => {
 			let title = "failed to load last tag. Use `None`";
@@ -57,15 +66,20 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 			None
 		}
 	};
-	if Some(&tag.version) != old_tag.as_ref() {
+	if Some(&tag.version) != index.as_ref().map(|f| &f.tag) {
 		println!("found new tag {:?}", tag.version);
 		let path = dir
 			.to_str()
 			.expect("can not convert path to string")
 			.to_owned();
+		let index = Index {
+			tag: tag.version.clone()
+		};
+		let index = serde_json::to_string_pretty(&index).unwrap();
 		return Ok(Some(Output {
 			tag: tag.version,
-			path
+			path,
+			index
 		}));
 	}
 	Ok(None)
