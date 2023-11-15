@@ -19,6 +19,12 @@ jobs:
       - run: cargo run
         env:
           RUST_BACKTRACE: 1
+  test:
+    runs-on: ubuntu-latest
+    needs: [check-updates]
+    steps:
+      - name: Echo matrix
+        run: echo "${{ needs.check-update.outputs.matrix }}"
           
   docker:
     runs-on: ubuntu-latest
