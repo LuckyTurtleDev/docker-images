@@ -19,6 +19,7 @@ jobs:
       - run: cargo run
         env:
           RUST_BACKTRACE: 1
+      - run: cat output.txt >> $GITHUB_OUTPUT
   test:
     runs-on: ubuntu-latest
     needs: [check-updates]
