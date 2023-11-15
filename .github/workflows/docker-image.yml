@@ -39,11 +39,9 @@ jobs:
             targe
           key: "${{runner.os}} Rust ${{steps.rust-toolchain.outputs.cachekey}} Lock ${{hashFiles('Cargo.lock')}}"
       - run: cargo run
+        id: outputs
         env:
           RUST_BACKTRACE: 1
-      - run: cat output.txt >> $GITHUB_OUTPUT
-        id: outputs
-      - run: cat output.txt
       
   test:
     runs-on: ubuntu-latest
