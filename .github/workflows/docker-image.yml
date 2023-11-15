@@ -1,0 +1,32 @@
+name: Docker
+on:
+  push:
+  
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+        id: "rust-toolchain"
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/git
+            ~/.cargo/registry
+            targe
+          key: "${{runner.os}} Rust ${{steps.rust-toolchain.outputs.cachekey}} Lock ${{hashFiles('Cargo.lock')}}"
+      - run: cargo run
+        env:
+          RUST_BACKTRACE: 1
+          
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.check-update.outputs.matrix) }}
+    steps:
+      - name: Echo matrix
+        run: |
+          echo "${{ matrix.tag }}"
+          echo "${{ matrix.path }}
