@@ -93,5 +93,5 @@ fn main() {
 		serde_json::to_string_pretty(&matrix).unwrap()
 	);
 	let json = serde_json::to_string(&matrix).unwrap();
-	println!("::set-output matrix={json}");
+	println!("::set-output name=matrix:{json}");
 }
