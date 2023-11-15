@@ -62,8 +62,10 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ./dockerfiles/anki
+          context: ${{ matrix.path }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}}
           platforms: ${{ inputs.platforms }}
+      - name: update index.json
+        run: echo '{{ matrix.index }}' >> ${{ format('{0}/index.json') matrix.path }}
