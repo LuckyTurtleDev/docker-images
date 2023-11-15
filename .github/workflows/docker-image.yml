@@ -23,10 +23,10 @@ jobs:
           OUTPUT2: ${{needs.job1.outputs.output2}}
         run: echo "$OUTPUT1 $OUTPUT2"
 
-  update:
+  check-update:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.test.outputs.test }}
+      matrix: ${{ steps.outputs.outputs.matrix }}
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
@@ -42,26 +42,23 @@ jobs:
         env:
           RUST_BACKTRACE: 1
       - run: cat output.txt >> $GITHUB_OUTPUT
-        id: output
+        id: outputs
       - run: cat output.txt
-      - run: echo "test=test" >> $GITHUB_OUTPUT
-        id: test
       
   test:
     runs-on: ubuntu-latest
     needs: [update]
     steps:
       - name: Echo matrix
-        run: echo "${{ needs.update.output.matrix }}"
-      - name: test
         run: echo "${{ needs.update.outputs.matrix }}"
+
           
   docker:
     runs-on: ubuntu-latest
     needs: [update]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.update.output.matrix) }}
+      matrix: ${{ fromJson(needs.update.outputs.matrix) }}
     steps:
       - name: Echo matrix
         run: |
