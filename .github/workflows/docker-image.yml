@@ -20,6 +20,8 @@ jobs:
         env:
           RUST_BACKTRACE: 1
       - run: cat output.txt >> $GITHUB_OUTPUT
+      - run: cat output.txt
+      
   test:
     runs-on: ubuntu-latest
     needs: [check-updates]
