@@ -28,14 +28,14 @@ jobs:
     needs: [check-updates]
     steps:
       - name: Echo matrix
-        run: echo "${{ needs.check-update.output.matrix }}"
+        run: echo "${{ needs.check-updates.output.matrix }}"
           
   docker:
     runs-on: ubuntu-latest
     needs: [check-updates]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.check-update.output.matrix) }}
+      matrix: ${{ fromJson(needs.check-updates.output.matrix) }}
     steps:
       - name: Echo matrix
         run: |
