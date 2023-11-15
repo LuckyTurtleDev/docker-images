@@ -55,7 +55,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ format('ghcr.io/{0}', matrix.name) }}
+          images: ${{ format('ghcr.io/{0}/{1}', github.repository_owner, matrix.name) }}
           tags: |
             ${{ matrix.tag }}
             latest
