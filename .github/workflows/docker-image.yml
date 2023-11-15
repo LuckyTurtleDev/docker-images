@@ -57,7 +57,7 @@ jobs:
         with:
           images: ${{ format('ghcr.io/{0}/{1}', github.repository_owner, matrix.name) }}
           tags: |
-            ${{ matrix.tag }}
+            ${{ matrix.version }}
             latest
       - name: Build and push
         uses: docker/build-push-action@v3
