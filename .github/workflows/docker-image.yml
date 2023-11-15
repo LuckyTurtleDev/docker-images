@@ -69,4 +69,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}}
           platforms: ${{ inputs.platforms }}
       - name: update index.json
-        run: echo '{{ matrix.index }}' >> ${{ format('{0}/index.json') matrix.path }}
+        run: echo '${{ matrix.index }}' >> ${{ format('{0}/index.json') matrix.path }}
