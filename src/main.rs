@@ -22,7 +22,10 @@ struct Output {
 
 fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 	let dir = dir.path();
-	let dir_name = dir.file_name().unwrap_or_else(|| dir.as_os_str());
+	let dir_name = dir
+		.file_name()
+		.unwrap_or_else(|| dir.as_os_str())
+		.to_string_lossy();
 	println!("process {dir:?}");
 	let config_path = dir.join("config.toml");
 	let config =
@@ -45,7 +48,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		Err(err) => {
 			let title = "failed to load last tag. Use `None`";
 			let msg = format!("{err:?}"); // print string as single line
-			println!("::warning title={dir_name:?}: {title}::{msg:?}");
+			println!("::warning title={dir_name}: {title}::{msg:?}");
 			let err = err.context(title);
 			eprintln!("{err:?}");
 			None
