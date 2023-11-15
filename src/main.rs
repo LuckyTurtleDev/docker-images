@@ -1,10 +1,7 @@
 use anyhow::Context;
 use package_version::{Source, Sources};
 use serde::{Deserialize, Serialize};
-use std::{
-	env,
-	fs::{read_dir, read_to_string, DirEntry}
-};
+use std::fs::{read_dir, read_to_string, write, DirEntry};
 
 #[derive(Debug, Deserialize)]
 struct Config {
@@ -25,6 +22,7 @@ struct Output {
 
 fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 	let dir = dir.path();
+	let dir_name = dir.file_name().unwrap_or_else(|| dir.as_os_str());
 	println!("process {dir:?}");
 	let config_path = dir.join("config.toml");
 	let config =
@@ -47,7 +45,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		Err(err) => {
 			let title = "failed to load last tag. Use `None`";
 			let msg = format!("{err:?}"); // print string as single line
-			println!("::warning title={title}::{msg:?}");
+			println!("::warning title={dir_name:?}: {title}::{msg:?}");
 			let err = err.context(title);
 			eprintln!("{err:?}");
 			None
@@ -93,5 +91,5 @@ fn main() {
 	);
 	let json = serde_json::to_string(&matrix).unwrap();
 	let json = format!("matrix={json}");
-	env::set_var("GITHUB_OUTPUT", json);
+	write(".output.txt", json).expect("failed to write to output.txt`");
 }
