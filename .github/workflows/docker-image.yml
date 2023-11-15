@@ -54,7 +54,7 @@ jobs:
       - name: Echo matrix
         run: echo "${{ needs.update.output.matrix }}"
       - name: test
-        run: echo "${{ needs.update.outputs.test }}"
+        run: echo "${{ needs.update.outputs.matrix }}"
           
   docker:
     runs-on: ubuntu-latest
