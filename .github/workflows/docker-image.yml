@@ -28,7 +28,7 @@ jobs:
     needs: [check-updates]
     steps:
       - name: Echo matrix
-        run: echo "${{ needs.check-updates.outputs.matrix }}"
+        run: echo '${{ needs.check-updates.outputs.matrix }}'
           
   docker:
     runs-on: ubuntu-latest
