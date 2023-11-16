@@ -33,15 +33,14 @@ jobs:
       matrix: ${{ fromJson(needs.check-updates.outputs.matrix) }}
     name: build '${{ matrix.path }}'
     steps:
-      - run: echo 'name=${{ matrix.name }}'
       - name: Echo matrix
         if: ${{ matrix.skip != 'true' }}
         run: |
           echo 'version=${{ matrix.version }}'
           echo 'path=${{ matrix.path }}'
           echo 'name=${{ matrix.name }}'
-          echo 'index=${{ matrix.index }}'
           echo 'platforms=${{ matrix.platforms }}'
+          echo 'index=${{ matrix.index }}'
       - uses: actions/checkout@v3
         if: ${{ matrix.skip != 'true' }}
       - name: Set up Docker Buildx
