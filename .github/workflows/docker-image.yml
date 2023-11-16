@@ -1,6 +1,8 @@
 name: Docker
 on:
   push:
+  schedule:
+    - cron:  '0 */11 * * *'
   
 jobs:
   check-updates:
