@@ -60,7 +60,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		}) {
 		Ok(value) => Some(value),
 		Err(err) => {
-			let title = "failed to load last tag. Use `None`";
+			let title = "failed to load index. Use `None`";
 			let msg = format!("{err:?}"); // print string as single line
 			println!("::warning title={dir_name}: {title}::{msg:?}");
 			let err = err.context(title);
@@ -113,7 +113,11 @@ fn main() {
 		"matrix output: {}",
 		serde_json::to_string_pretty(&matrix).unwrap()
 	);
-	let json = serde_json::to_string(&matrix).unwrap();
+	let json = if matrix.include.is_empty() {
+		r#"{"include": [{"skip": "true", "name": "no updates available"}]}"#.to_owned()
+	} else {
+		serde_json::to_string(&matrix).unwrap()
+	};
 	let json = format!("matrix={json}");
 	let github_output = env::var("GITHUB_OUTPUT")
 		.expect("GITHUB_OUTPUT environment variabel is not present");
