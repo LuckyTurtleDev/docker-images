@@ -33,6 +33,7 @@ jobs:
       matrix: ${{ fromJson(needs.check-updates.outputs.matrix) }}
     name: build '${{ matrix.path }}'
     steps:
+      - run: echo 'name=${{ matrix.name }}'
       - name: Echo matrix
         if: ${{ matrix.skip != 'true' }}
         run: |
