@@ -113,7 +113,11 @@ fn main() {
 		"matrix output: {}",
 		serde_json::to_string_pretty(&matrix).unwrap()
 	);
-	let json = serde_json::to_string(&matrix).unwrap();
+	let json = if matrix.include.is_empty() {
+		"{}".to_owned()
+	} else {
+		serde_json::to_string(&matrix).unwrap()
+	};
 	let json = format!("matrix={json}");
 	let github_output = env::var("GITHUB_OUTPUT")
 		.expect("GITHUB_OUTPUT environment variabel is not present");
