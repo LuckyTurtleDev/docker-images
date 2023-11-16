@@ -78,7 +78,7 @@ jobs:
           platforms: ${{ inputs.platforms }}
       - name: update index.json
         if: ${{ matrix.skip != 'true' }}
-        run: echo '${{ matrix.index }}' >> ${{ format('{0}/index.json', matrix.path) }}
+        run: echo '${{ matrix.index }}' > ${{ format('{0}/index.json', matrix.path) }}
       - name: push index.json
         if: ${{ matrix.skip != 'true' }}
         run: |
