@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.check-updates.outputs.matrix) }}
-    name: build '${{ matrix.path }}'
+    name: build '${{ matrix.name }}'
     steps:
       - name: Echo matrix
         if: ${{ matrix.skip != 'true' }}
