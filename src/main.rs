@@ -60,7 +60,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		}) {
 		Ok(value) => Some(value),
 		Err(err) => {
-			let title = "failed to load last tag. Use `None`";
+			let title = "failed to load index. Use `None`";
 			let msg = format!("{err:?}"); // print string as single line
 			println!("::warning title={dir_name}: {title}::{msg:?}");
 			let err = err.context(title);
