@@ -70,3 +70,12 @@ jobs:
           platforms: ${{ inputs.platforms }}
       - name: update index.json
         run: echo '${{ matrix.index }}' >> ${{ format('{0}/index.json', matrix.path) }}
+      - name: push index.json
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'CI'
+          git config --global pull.rebase true
+          git add -f  ${{ format('{0}/index.json', matrix.path) }}
+          git commit -m '${{ format('update {0} to {1}', matrix.name, matrix.version) }}'  ${{ format('{0}/index.json', matrix.path) }}
+          git pull
+          git push
