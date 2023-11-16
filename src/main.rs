@@ -114,7 +114,7 @@ fn main() {
 		serde_json::to_string_pretty(&matrix).unwrap()
 	);
 	let json = if matrix.include.is_empty() {
-		r#"{"include": [{"skip": "true"}]}"#.to_owned()
+		r#"{"include": [{"skip": "true", "name": "no updates available"}]}"#.to_owned()
 	} else {
 		serde_json::to_string(&matrix).unwrap()
 	};
