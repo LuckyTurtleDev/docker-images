@@ -40,6 +40,7 @@ jobs:
           echo 'path=${{ matrix.path }}'
           echo 'name=${{ matrix.name }}'
           echo 'platforms=${{ matrix.platforms }}'
+          echo 'docker_tags=${{ matrix.docker_tags }}'
           echo 'index=${{ matrix.index }}'
       - uses: actions/checkout@v3
         if: ${{ matrix.skip != 'true' }}
@@ -63,9 +64,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ format('ghcr.io/{0}/{1}', github.repository_owner, matrix.name) }}
-          tags: |
-            ${{ matrix.version }}
-            latest
+          tags: ${{ matrix.docker_tags }}
       - name: Build and push
         if: ${{ matrix.skip != 'true' }}
         uses: docker/build-push-action@v3
