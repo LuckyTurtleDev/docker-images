@@ -74,7 +74,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 			let msg = format!("{err:?}"); // print string as single line
 			println!("::warning title={dir_name}: {title}::{msg:?}");
 			let err = err.context(title);
-			eprintln!("{err:?}");
+			println!("{err:?}");
 			None
 		}
 	};
@@ -121,7 +121,7 @@ fn main() {
 				let title = format!("failed to process {dir:?}");
 				println!("::error title={title}::{err:?}");
 				let err = err.context(title);
-				eprintln!("{err:?}");
+				println!("{err:?}");
 			}
 		}
 		println!("::endgroup::")
