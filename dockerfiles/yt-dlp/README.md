@@ -1,14 +1,15 @@
-# youtube-dl-cron docker image
-Simple multiplatform docker image for youtube-dl with crond. Based on alpine.
+# yt-dlp
+Alpine multiplatform docker image for yt-dlp.
 
-example docker-compose:
+
+## docker-compose:
 ```yml
 version: '3'
 services:
-  youtube-dl-cron:
-    image: registry.gitlab.com/lukas1818/docker-youtube-dl-cron:latest
+  yt-dlp:
+    image: ghcr.io/luckyturtledev/yt-dlp
     volumes:
       - "./data:/data"
-      - "./tasks.cron:/tasks.cron:ro"
-    restart: unless-stopped
+    command: yt-dlp -h
 ```
+The `/data` folder must be owned by user id `1000:1000`.
