@@ -3,7 +3,8 @@ use package_version::{Source, Sources};
 use serde::{Deserialize, Serialize};
 use std::{
 	env,
-	fs::{read_dir, read_to_string, write, DirEntry}
+	fs::{read_dir, read_to_string, write},
+	path::Path
 };
 
 #[derive(Debug, Deserialize)]
@@ -41,13 +42,9 @@ struct Index {
 	version: String
 }
 
-fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
-	let dir = dir.path();
-	let dir_name = dir
-		.file_name()
-		.unwrap_or_else(|| dir.as_os_str())
-		.to_string_lossy();
-	println!("process {:?}", dir.as_path());
+fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
+	let dir_name = dir.file_name().unwrap_or(dir.as_os_str()).to_string_lossy();
+	println!("process {dir:?}");
 	let config_path = dir.join("config.toml");
 	let config =
 		read_to_string(config_path).with_context(|| "Failed to open `config.toml`")?;
@@ -109,8 +106,8 @@ fn main() {
 	let mut outputs = Vec::new();
 	let dirs = read_dir("./dockerfiles").expect("failed to read dir `dockerfiles`");
 	for dir in dirs {
-		let dir = dir.expect("failed to access dir");
-		println!("::group::{dir:?}");
+		let dir = dir.expect("failed to access dir").path();
+		println!("::group::process {dir:?}");
 		match process_dir(&dir) {
 			Ok(output) => {
 				if let Some(output) = output {
