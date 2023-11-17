@@ -47,7 +47,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 		.file_name()
 		.unwrap_or_else(|| dir.as_os_str())
 		.to_string_lossy();
-	println!("process {dir:?}");
+	println!("process {dir:?}", dir.as_path());
 	let config_path = dir.join("config.toml");
 	let config =
 		read_to_string(config_path).with_context(|| "Failed to open `config.toml`")?;
