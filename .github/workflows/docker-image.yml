@@ -74,7 +74,7 @@ jobs:
           build-args: version=${{ matrix.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}}
-          platforms: ${{ inputs.platforms }}
+          platforms: ${{ matrix.platforms }}
       - name: update index.json
         if: ${{ matrix.skip != 'true' }}
         run: echo '${{ matrix.index }}' > ${{ format('{0}/index.json', matrix.path) }}
