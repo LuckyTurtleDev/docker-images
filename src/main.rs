@@ -8,7 +8,16 @@ use std::{
 
 #[derive(Debug, Deserialize)]
 struct Config {
-	source: Sources
+	source: Sources,
+	#[serde(default)]
+	tags: TagConfig
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct TagConfig {
+	/// use the found verison as tag
+	#[serde(default)]
+	version: bool
 }
 
 /// Github action matrix
@@ -23,6 +32,7 @@ struct Output {
 	path: String,
 	name: String,
 	platforms: String,
+	docker_tags: String,
 	index: String
 }
 
@@ -78,11 +88,17 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 			version: tag.version.clone()
 		};
 		let index = serde_json::to_string_pretty(&index).unwrap();
+		let mut docker_tags = "|\nlatest\n".to_owned();
+		if config.tags.version {
+			docker_tags += &tag.version;
+			docker_tags += "\n";
+		}
 		return Ok(Some(Output {
 			version: tag.version,
 			path,
 			name: dir_name.into(),
 			platforms: "linux/amd64".to_owned(),
+			docker_tags,
 			index
 		}));
 	}

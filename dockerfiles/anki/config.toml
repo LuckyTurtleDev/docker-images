@@ -1,3 +1,6 @@
 [source]
 type = "github_release"
 repo = "ankitects/anki"
+
+[tags]
+version = "true"
