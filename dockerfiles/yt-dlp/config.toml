@@ -1,0 +1,4 @@
+[source]
+type = "docker_hub"
+image = "alpine"
+namespace = "_"
