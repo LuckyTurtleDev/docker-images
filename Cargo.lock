@@ -319,7 +319,7 @@ dependencies = [
 [[package]]
 name = "package-version"
 version = "0.1.0"
-source = "git+https://github.com/LuckyTurtleDev/package-version.git#d872f145ff5f69bc4cce9cd9a24b21227fdfbeb9"
+source = "git+https://github.com/LuckyTurtleDev/package-version.git#348c943d0a7f4da5a328ef5d1d1c3db14749612c"
 dependencies = [
  "anyhow",
  "attohttpc",
