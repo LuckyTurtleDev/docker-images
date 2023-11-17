@@ -110,9 +110,10 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 		}
 		let mut platforms = "".to_owned();
 		for platform in config.config.platforms {
-			platforms += ",";
 			platforms += &platform;
+			platforms += ",";
 		}
+		platforms.pop();
 		return Ok(Some(Output {
 			version: tag.version,
 			path,
