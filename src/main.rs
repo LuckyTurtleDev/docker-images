@@ -110,6 +110,7 @@ fn main() {
 	let dirs = read_dir("./dockerfiles").expect("failed to read dir `dockerfiles`");
 	for dir in dirs {
 		let dir = dir.expect("failed to access dir");
+		println!("::group::{dir:?}");
 		match process_dir(&dir) {
 			Ok(output) => {
 				if let Some(output) = output {
@@ -123,6 +124,7 @@ fn main() {
 				eprintln!("{err:?}");
 			}
 		}
+		println!("::endgroup::")
 	}
 	let matrix = Matrix { include: outputs };
 	println!(
