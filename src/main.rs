@@ -8,17 +8,35 @@ use std::{
 };
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct Config {
 	source: Sources,
 	#[serde(default)]
-	tags: TagConfig
+	tags: TagConfig,
+	#[serde(default)]
+	config: ConfigConfig
 }
 
 #[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct TagConfig {
 	/// use the found verison as tag
 	#[serde(default)]
 	version: bool
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+struct ConfigConfig {
+	platforms: Vec<String>
+}
+
+impl Default for ConfigConfig {
+	fn default() -> Self {
+		Self {
+			platforms: vec!["linux/amd64".to_owned()]
+		}
+	}
 }
 
 /// Github action matrix
@@ -90,11 +108,16 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 			docker_tags += "\n";
 			docker_tags += &tag.version;
 		}
+		let mut platforms = "".to_owned();
+		for platform in config.config.platforms {
+			platforms += ",";
+			platforms += &platform;
+		}
 		return Ok(Some(Output {
 			version: tag.version,
 			path,
 			name: dir_name.into(),
-			platforms: "linux/amd64".to_owned(),
+			platforms,
 			docker_tags,
 			index
 		}));
