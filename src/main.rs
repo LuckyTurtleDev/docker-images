@@ -87,7 +87,7 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 		let index = serde_json::to_string_pretty(&index).unwrap();
 		let mut docker_tags = "latest".to_owned();
 		if config.tags.version {
-			docker_tags += " ";
+			docker_tags += "\n";
 			docker_tags += &tag.version;
 		}
 		return Ok(Some(Output {
