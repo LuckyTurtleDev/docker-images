@@ -3,12 +3,40 @@ use package_version::{Source, Sources};
 use serde::{Deserialize, Serialize};
 use std::{
 	env,
-	fs::{read_dir, read_to_string, write, DirEntry}
+	fs::{read_dir, read_to_string, write},
+	path::Path
 };
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct Config {
-	source: Sources
+	source: Sources,
+	#[serde(default)]
+	tags: TagConfig,
+	#[serde(default)]
+	config: ConfigConfig
+}
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct TagConfig {
+	/// use the found verison as tag
+	#[serde(default)]
+	version: bool
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+struct ConfigConfig {
+	platforms: Vec<String>
+}
+
+impl Default for ConfigConfig {
+	fn default() -> Self {
+		Self {
+			platforms: vec!["linux/amd64".to_owned()]
+		}
+	}
 }
 
 /// Github action matrix
@@ -23,6 +51,7 @@ struct Output {
 	path: String,
 	name: String,
 	platforms: String,
+	docker_tags: String,
 	index: String
 }
 
@@ -31,12 +60,8 @@ struct Index {
 	version: String
 }
 
-fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
-	let dir = dir.path();
-	let dir_name = dir
-		.file_name()
-		.unwrap_or_else(|| dir.as_os_str())
-		.to_string_lossy();
+fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
+	let dir_name = dir.file_name().unwrap_or(dir.as_os_str()).to_string_lossy();
 	println!("process {dir:?}");
 	let config_path = dir.join("config.toml");
 	let config =
@@ -64,7 +89,7 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 			let msg = format!("{err:?}"); // print string as single line
 			println!("::warning title={dir_name}: {title}::{msg:?}");
 			let err = err.context(title);
-			eprintln!("{err:?}");
+			println!("{err:?}");
 			None
 		}
 	};
@@ -78,11 +103,23 @@ fn process_dir(dir: &DirEntry) -> anyhow::Result<Option<Output>> {
 			version: tag.version.clone()
 		};
 		let index = serde_json::to_string_pretty(&index).unwrap();
+		let mut docker_tags = "latest".to_owned();
+		if config.tags.version {
+			docker_tags += "\n";
+			docker_tags += &tag.version;
+		}
+		let mut platforms = "".to_owned();
+		for platform in config.config.platforms {
+			platforms += &platform;
+			platforms += ",";
+		}
+		platforms.pop();
 		return Ok(Some(Output {
 			version: tag.version,
 			path,
 			name: dir_name.into(),
-			platforms: "linux/amd64".to_owned(),
+			platforms,
+			docker_tags,
 			index
 		}));
 	}
@@ -93,7 +130,8 @@ fn main() {
 	let mut outputs = Vec::new();
 	let dirs = read_dir("./dockerfiles").expect("failed to read dir `dockerfiles`");
 	for dir in dirs {
-		let dir = dir.expect("failed to access dir");
+		let dir = dir.expect("failed to access dir").path();
+		println!("::group::process {dir:?}");
 		match process_dir(&dir) {
 			Ok(output) => {
 				if let Some(output) = output {
@@ -104,9 +142,10 @@ fn main() {
 				let title = format!("failed to process {dir:?}");
 				println!("::error title={title}::{err:?}");
 				let err = err.context(title);
-				eprintln!("{err:?}");
+				println!("{err:?}");
 			}
 		}
+		println!("::endgroup::")
 	}
 	let matrix = Matrix { include: outputs };
 	println!(
