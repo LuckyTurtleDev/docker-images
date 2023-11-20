@@ -3,8 +3,10 @@ use nonempty::NonEmpty;
 use package_version::{Source, Sources, Tag};
 use serde::{Deserialize, Serialize};
 use std::{
+	collections::HashSet,
 	env,
 	fs::{read_dir, read_to_string, write},
+	iter,
 	path::Path
 };
 
@@ -18,12 +20,25 @@ struct Config {
 	config: ConfigConfig
 }
 
-#[derive(Debug, Default, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Deserialize)]
+#[serde(default, deny_unknown_fields)]
 struct TagConfig {
 	/// use the found verison as tag
-	#[serde(default)]
-	version: bool
+	version: bool,
+	/// generate semver tags
+	semver: bool,
+	/// use `latest` tag. (`latest` tag can also be set per semver)
+	latest: bool
+}
+
+impl Default for TagConfig {
+	fn default() -> Self {
+		TagConfig {
+			version: false,
+			semver: false,
+			latest: true
+		}
+	}
 }
 
 #[derive(Debug, Deserialize)]
@@ -107,11 +122,46 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 			.expect("can not convert path to string")
 			.to_owned();
 		let new_index_str = serde_json::to_string_pretty(&new_index).unwrap();
-		let mut docker_tags = "latest".to_owned();
-		if config.tags.version {
-			docker_tags += "\n";
-			docker_tags += new_index.versions.first().unwrap(); //nonempty
+		let version = new_index.versions.into_iter().next().unwrap(); //nonempty
+		let mut docker_tags = HashSet::new();
+		if config.tags.latest {
+			docker_tags.insert("latest".to_owned());
 		}
+		if config.tags.version {
+			docker_tags.insert(version.clone());
+		}
+		if config.tags.semver {
+			let (start, leading_char) = if version.starts_with('v') {
+				(1, "v")
+			} else {
+				(0, "")
+			};
+			let semver =
+				semver::Version::parse(&version[start ..]).with_context(|| {
+					format!("{:?} is not semver format", &version[start ..])
+				})?;
+			if semver.pre.is_empty() {
+				// do not updgrade `v1` tag, if `v1.2.2-rc1` was released
+				docker_tags.insert(format!(
+					"{leading_char}{}.{}.{}",
+					semver.major, semver.minor, semver.patch
+				));
+				docker_tags
+					.insert(format!("{leading_char}{}.{}", semver.major, semver.minor));
+				docker_tags.insert(format!("{leading_char}{}", semver.major));
+				docker_tags.insert("latest".to_owned());
+			} else {
+				docker_tags.insert(format!(
+					"{leading_char}{}.{}.{}-{}",
+					semver.major, semver.minor, semver.patch, semver.pre
+				));
+			}
+		}
+		let mut docker_tags: String = docker_tags
+			.iter()
+			.flat_map(|f| f.chars().chain(iter::once('\n')))
+			.collect();
+		docker_tags.pop(); //remove lat '\n'
 		let mut platforms = "".to_owned();
 		for platform in config.config.platforms {
 			platforms += &platform;
@@ -119,7 +169,7 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 		}
 		platforms.pop();
 		return Ok(Some(Output {
-			version: new_index.versions.into_iter().next().unwrap(),
+			version,
 			path,
 			name: dir_name.into(),
 			platforms,
