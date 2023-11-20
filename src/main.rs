@@ -1,5 +1,6 @@
 use anyhow::Context;
-use package_version::{Source, Sources};
+use nonempty::NonEmpty;
+use package_version::{Source, Sources, Tag};
 use serde::{Deserialize, Serialize};
 use std::{
 	env,
@@ -10,7 +11,7 @@ use std::{
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Config {
-	source: Sources,
+	source: NonEmpty<Sources>,
 	#[serde(default)]
 	tags: TagConfig,
 	#[serde(default)]
@@ -55,9 +56,18 @@ struct Output {
 	index: String
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Eq, Serialize, PartialEq)]
 struct Index {
-	version: String
+	versions: Vec<String>
+}
+
+fn get_tag(source: Sources) -> anyhow::Result<Tag> {
+	let tags = source.get_tags().with_context(|| "failed to get tags")?;
+	let tag = tags
+		.into_iter()
+		.next()
+		.ok_or_else(|| anyhow::Error::msg("No suitable tag aviable at source"))?;
+	Ok(tag)
 }
 
 fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
@@ -68,16 +78,12 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 		read_to_string(config_path).with_context(|| "Failed to open `config.toml`")?;
 	let config: Config =
 		basic_toml::from_str(&config).with_context(|| "failed to prase config")?;
-	let tags = config
-		.source
-		.get_tags()
-		.with_context(|| "failed to get tags")?;
-	let tag = tags
-		.into_iter()
-		.next()
-		.ok_or_else(|| anyhow::Error::msg("No suitable tag aviable at source"))?;
+	let mut versions = Vec::with_capacity(config.source.len());
+	for source in config.source.into_iter() {
+		versions.push(get_tag(source)?.version);
+	}
 	let index_path = dir.join("index.json");
-	let index: Option<Index> = match read_to_string(&index_path)
+	let old_index: Option<Index> = match read_to_string(&index_path)
 		.with_context(|| format!("failed to open {index_path:?}"))
 		.and_then(|index| {
 			serde_json::from_str(&index)
@@ -93,20 +99,18 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 			None
 		}
 	};
-	if Some(&tag.version) != index.as_ref().map(|f| &f.version) {
-		println!("found new tag {:?}", tag.version);
+	let new_index = Index { versions };
+	if Some(&new_index) != old_index.as_ref() {
+		println!("found new versions {:?}", new_index.versions);
 		let path = dir
 			.to_str()
 			.expect("can not convert path to string")
 			.to_owned();
-		let index = Index {
-			version: tag.version.clone()
-		};
-		let index = serde_json::to_string_pretty(&index).unwrap();
+		let new_index_str = serde_json::to_string_pretty(&new_index).unwrap();
 		let mut docker_tags = "latest".to_owned();
 		if config.tags.version {
 			docker_tags += "\n";
-			docker_tags += &tag.version;
+			docker_tags += new_index.versions.first().unwrap(); //nonempty
 		}
 		let mut platforms = "".to_owned();
 		for platform in config.config.platforms {
@@ -115,12 +119,12 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 		}
 		platforms.pop();
 		return Ok(Some(Output {
-			version: tag.version,
+			version: new_index.versions.into_iter().next().unwrap(),
 			path,
 			name: dir_name.into(),
 			platforms,
 			docker_tags,
-			index
+			index: new_index_str
 		}));
 	}
 	Ok(None)
