@@ -15,7 +15,7 @@ Repetier Server from [repetier-server.com](https://www.repetier-server.com/downl
 version: "3.4"
 services:
     repetier-server:
-        image: registry.gitlab.com/luckyturtledev/docker-repetier-server:latest
+        image: ghcr.io/luckyturtledev/yt-dlp:latest
         container_name: repetier-server
         ports:
             - '80:3344'
