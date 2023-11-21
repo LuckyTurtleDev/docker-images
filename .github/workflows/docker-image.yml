@@ -70,7 +70,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.path }}
-          push: ${{ github.ref == 'main' }}
+          push: ${{ github.ref == 'refs/heads/main' }}
           build-args: version=${{ matrix.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}}
