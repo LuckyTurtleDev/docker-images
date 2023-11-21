@@ -2,6 +2,12 @@
 type = "manual"
 version = "1.4.13"
 
+[[source]]
+type = "docker_hub"
+namespace = "_"
+image = "debian"
+tag = "stable-slim"
+
 [tags]
 version = true
 semver = true
