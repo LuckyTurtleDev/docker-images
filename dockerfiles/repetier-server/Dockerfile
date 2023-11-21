@@ -1,19 +1,14 @@
 FROM debian:stable-slim
 
-ARG VERSION=1.4.4
+ARG version
 ARG TARGETARCH
-
-LABEL org.opencontainers.image.url="https://gitlab.com/luckyturtledev/docker-repetier-server/container_registry"
-LABEL org.opencontainers.image.title="a 3D-printer webinterface"
-LABEL org.opencontainers.image.source="https://gitlab.com/LuckyTurtleDev/docker-repetier-server"
-LABEL org.opencontainers.image.version="${VERSION}"
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y curl \
     && case ${TARGETARCH} in arm) ARCH="armhf" ;; arm64) ARCH="arm64hf" ;; 386) ARCH="intel32" ;; amd64) ARCH="amd64" ;; esac \
-    && curl http://download.repetier.com/files/server/debian-${ARCH}/Repetier-Server-${VERSION}-Linux.deb -o repetier-server.deb \
+    && curl http://download.repetier.com/files/server/debian-${ARCH}/Repetier-Server-${version}-Linux.deb -o repetier-server.deb \
     #download.repetier.com has no https
     && dpkg --unpack repetier-server.deb \
     && apt-get -f install -y \

@@ -1,0 +1,15 @@
+[[source]]
+type = "manuall"
+version = "1.4.13"
+
+[tags]
+version = true
+semver = true
+
+[config]linux/arm/v7,linux/arm64/v8,linux/386,linux/amd64
+platforms = [
+	"linux/386",
+	"linux/amd64",
+	"linux/arm/v7",
+	"linux/arm64/v8",
+	]
