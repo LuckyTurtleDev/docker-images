@@ -28,7 +28,7 @@ services:
 The `SYNC_USER1` environment variabels defines user and password.
 Multiple user can be added by using `SYNC_USER2`, `SYNC_USER3`, ... environment variabels.
 
-The docker-compose bind the server to `127.0.0.1:10080`. So the port `10080` can be tunnel through an reverse proxy (strongly recommended for acess above the internett).
+The docker-compose bind the server to `127.0.0.1:10080`. So the port `10080` can be tunnel through an reverse proxy (strongly recommended for acess over the internett).
 If you do not want to use an reverse proxy change `127.0.0.1:10080:8080` to `8080` at the docker-compose.
 
 The `data` folder should be owned by user `1000:1000` or whatever `user` you have define at the docker-compose.
