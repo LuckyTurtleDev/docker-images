@@ -68,6 +68,7 @@ struct Output {
 	version: String,
 	path: String,
 	name: String,
+	test: bool,
 	platforms: String,
 	docker_tags: String,
 	index: String
@@ -178,6 +179,7 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 			version,
 			path,
 			name,
+			test: config.config.test,
 			platforms,
 			docker_tags,
 			index: new_index_str
