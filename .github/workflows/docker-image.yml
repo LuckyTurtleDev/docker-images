@@ -39,7 +39,7 @@ jobs:
           echo 'version=${{ matrix.version }}'
           echo 'path=${{ matrix.path }}'
           echo 'name=${{ matrix.name }}'
-          echo 'name=${{ matrix.test }}'
+          echo 'test=${{ matrix.test }}'
           echo 'platforms=${{ matrix.platforms }}'
           echo 'docker_tags=${{ matrix.docker_tags }}'
           echo 'index=${{ matrix.index }}'
@@ -71,7 +71,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ matrix.path }}
-          push: ${{ github.ref == 'refs/heads/main' || matrix.texst == 'true' }}
+          push: ${{ github.ref == 'refs/heads/main' || matrix.test }}
           build-args: version=${{ matrix.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}}
