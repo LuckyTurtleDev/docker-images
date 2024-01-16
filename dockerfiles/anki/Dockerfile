@@ -21,7 +21,7 @@ RUN apt-get -y update && apt-get -y install protobuf-compiler clang mold musl mu
 ENV PROTOC=/usr/bin/protoc
 RUN echo "build anki version ${version} for $(cat /.target)"
 RUN cargo install --locked --target "$(cat /.target)" --git https://github.com/ankitects/anki.git --tag ${version} anki-sync-server
-#RUN ldd /usr/local/cargo/bin/anki-sync-server
+RUN ldd /usr/local/cargo/bin/anki-sync-server
 
 
 FROM --platform=$BUILDPLATFORM scratch
