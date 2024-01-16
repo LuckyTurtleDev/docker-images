@@ -3,8 +3,8 @@ CC_armv7-unknown-linux-musleabihf = "clang -I /usr/include/arm-linux-musleabihf 
 CXX_armv7-unknown-linux-musleabihf = "clang++ -I /usr/include/arm-linux-musleabihf -target armv7-unknown-linux-musleabihf -fuse-ld=mold"
 CC_aarch64-unknown-linux-musl = "clang -I /usr/include/aarch64-linux-musl -target aarch64-unknown-linux-musl -fuse-ld=mold"
 CXX_aarch64-unknown-linux-musl = "clang++ -I /usr/include/aarch64-linux-musl -target aarch64-unknown-linux-musl -fuse-ld=mold"
-CC_x86_64-unknown-linux-musl = "clang -I /usr/include/aarch64-linux-musl -target x86_64-unknown-linux-musl -fuse-ld=mold"
-CXX_x86_64-unknown-linux-musl = "clang++ -I /usr/include/aarch64-linux-musl -target x86_64-unknown-linux-musl -fuse-ld=mold"
+CC_x86_64-unknown-linux-musl = "clang -I /usr/include/x86_64-linux-musl -target x86_64-unknown-linux-musl -fuse-ld=mold"
+CXX_x86_64-unknown-linux-musl = "clang++ -I /usr/include/x86_64-linux-musl -target x86_64-unknown-linux-musl -fuse-ld=mold"
 
 
 [target.x86_64-unknown-linux-musl]
