@@ -4,4 +4,6 @@ repo = "ankitects/anki"
 
 [tags]
 version = true
+
+[config]
 test = true
