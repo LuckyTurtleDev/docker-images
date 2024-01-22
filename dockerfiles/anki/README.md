@@ -5,7 +5,7 @@ The official selfhosted sync sever for the [anki](https://github.com/ankitects/a
 Do not confuse this official server, with the old unofficial (unmaintained?) [community sync server](https://github.com/ankicommunity/anki-sync-server).
 
 * url: [`ghcr.io/luckyturtledev/anki`](https://ghcr.io/luckyturtledev/anki)
-* multiplatform: ❌
+* multiplatform: ✅
 * semver tags: ❌
 * version tags: ✅
 * auto update: ✅
