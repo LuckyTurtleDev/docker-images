@@ -44,13 +44,15 @@ impl Default for TagConfig {
 #[derive(Debug, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 struct ConfigConfig {
-	platforms: Vec<String>
+	platforms: Vec<String>,
+	test: bool
 }
 
 impl Default for ConfigConfig {
 	fn default() -> Self {
 		Self {
-			platforms: vec!["linux/amd64".to_owned()]
+			platforms: vec!["linux/amd64".to_owned()],
+			test: false
 		}
 	}
 }
@@ -66,6 +68,7 @@ struct Output {
 	version: String,
 	path: String,
 	name: String,
+	test: bool,
 	platforms: String,
 	docker_tags: String,
 	index: String
@@ -168,10 +171,15 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 			platforms += ",";
 		}
 		platforms.pop();
+		let mut name = String::from(dir_name);
+		if config.config.test {
+			name = format!("test-{name}");
+		}
 		return Ok(Some(Output {
 			version,
 			path,
-			name: dir_name.into(),
+			name,
+			test: config.config.test,
 			platforms,
 			docker_tags,
 			index: new_index_str
