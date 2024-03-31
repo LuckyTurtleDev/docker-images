@@ -98,7 +98,9 @@ fn process_dir(dir: &Path) -> anyhow::Result<Option<Output>> {
 		basic_toml::from_str(&config).with_context(|| "failed to prase config")?;
 	let mut versions = Vec::with_capacity(config.source.len());
 	for source in config.source.into_iter() {
-		versions.push(get_tag(source)?.version);
+		let tag = get_tag(source)?;
+		println!("found tag: {tag:?}");
+		versions.push(tag.version);
 	}
 	let index_path = dir.join("index.json");
 	let old_index: Option<Index> = match read_to_string(&index_path)
