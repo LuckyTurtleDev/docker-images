@@ -1,11 +1,15 @@
 [[source]]
 type = "github_release"
-repo = "ankitects/anki"
+repo = "LuckyTurtleDev/yt-dlp-tasker"
 
 [[source]]
 type = "docker_hub"
 image = "alpine"
 namespace = "_"
+
+[tags]
+version = true
+semver = true
 
 
 [config]
