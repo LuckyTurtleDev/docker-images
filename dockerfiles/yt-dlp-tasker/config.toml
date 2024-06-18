@@ -1,0 +1,20 @@
+[[source]]
+type = "github_release"
+repo = "ankitects/anki"
+
+[[source]]
+type = "docker_hub"
+image = "alpine"
+namespace = "_"
+
+
+[config]
+platforms = [
+	"linux/386",
+	"linux/amd64",
+	"linux/arm/v6",
+	"linux/arm/v7",
+	"linux/arm64/v8",
+	"linux/ppc64le",
+	"linux/s390x"
+	]
