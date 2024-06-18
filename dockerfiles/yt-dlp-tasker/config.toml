@@ -1,0 +1,20 @@
+[[source]]
+type = "github_release"
+repo = "LuckyTurtleDev/yt-dlp-tasker"
+
+[[source]]
+type = "docker_hub"
+image = "alpine"
+namespace = "_"
+
+[tags]
+version = true
+semver = true
+
+
+[config]
+platforms = [
+	"linux/amd64",
+	"linux/arm/v7",
+	"linux/arm64/v8",
+	]
