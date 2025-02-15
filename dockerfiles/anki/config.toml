@@ -8,6 +8,5 @@ version = true
 [config]
 platforms = [
 	"linux/amd64",
-	"linux/arm/v7",
 	"linux/arm64/v8",
 	]
