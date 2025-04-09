@@ -28,3 +28,4 @@ FROM --platform=$BUILDPLATFORM scratch
 ENV SYNC_BASE=/data
 COPY --from=builder --chmod=0755 /usr/local/cargo/bin/anki-sync-server /
 CMD ["./anki-sync-server"]
+STOPSIGNAL SIGINT
