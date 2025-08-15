@@ -1,0 +1,22 @@
+[[source]]
+type = "manual"
+version = "2" #this should be the same as the tag at dockerhub
+
+[[source]]
+type = "docker_hub"
+namespace = "_"
+image = "caddy"
+tag = "2" #this should be the same as the tag at manual source
+
+[[source]]
+type = "github_release"
+repo = "caddy-dns/acmedns"
+
+[tags]
+version = true
+semver = false
+
+[config]
+platforms = [
+	"linux/amd64",
+	]
