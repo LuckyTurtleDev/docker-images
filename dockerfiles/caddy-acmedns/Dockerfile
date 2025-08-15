@@ -1,4 +1,4 @@
-ARG version=2
+ARG version
 
 FROM caddy:$version-builder AS builder
 
