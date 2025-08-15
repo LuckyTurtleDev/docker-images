@@ -9,7 +9,7 @@ image = "caddy"
 tag = "2" #this should be the same as the tag at manual source
 
 [[source]]
-type = "github_release"
+type = "github_tag"
 repo = "caddy-dns/acmedns"
 
 [tags]
