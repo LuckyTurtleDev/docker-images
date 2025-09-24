@@ -1,6 +1,6 @@
 [[source]]
 type = "manual"
-version = "1.4.15"
+version = "1.4.16"
 
 [[source]]
 type = "docker_hub"
